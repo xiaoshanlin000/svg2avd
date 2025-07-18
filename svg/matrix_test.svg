@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 基本矩形 -->
+  <rect x="10" y="10" width="50" height="50" fill="red" />
+  
+  <!-- 平移矩阵 -->
+  <g transform="matrix(1, 0, 0, 1, 100, 0)">
+    <rect x="10" y="10" width="50" height="50" fill="blue" />
+  </g>
+  
+  <!-- 旋转矩阵 (45度) -->
+  <g transform="matrix(0.7071, 0.7071, -0.7071, 0.7071, 150, 50)">
+    <rect x="10" y="10" width="50" height="50" fill="green" />
+  </g>
+  
+  <!-- 缩放矩阵 -->
+  <g transform="matrix(1.5, 0, 0, 0.8, 0, 100)">
+    <rect x="10" y="10" width="50" height="50" fill="purple" />
+  </g>
+  
+  <!-- 水平镜像矩阵 -->
+  <g transform="matrix(-1, 0, 0, 1, 400, 100)">
+    <rect x="10" y="10" width="50" height="50" fill="cyan" />
+  </g>
+  
+  <!-- 垂直镜像矩阵 -->
+  <g transform="matrix(1, 0, 0, -1, 0, 300)">
+    <rect x="10" y="100" width="50" height="50" fill="magenta" />
+  </g>
+  
+  <!-- 水平倾斜矩阵 -->
+  <g transform="matrix(1, 0, 0.5, 1, 100, 200)">
+    <rect x="10" y="10" width="50" height="50" fill="yellow" />
+  </g>
+  
+  <!-- 垂直倾斜矩阵 -->
+  <g transform="matrix(1, 0.5, 0, 1, 200, 200)">
+    <rect x="10" y="10" width="50" height="50" fill="lime" />
+  </g>
+  
+  <!-- 复合矩阵：旋转+缩放+平移 -->
+  <g transform="matrix(0.6, 0.3, -0.3, 0.6, 300, 200)">
+    <rect x="10" y="10" width="50" height="50" fill="orange" />
+  </g>
+</svg>

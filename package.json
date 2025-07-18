@@ -1,0 +1,25 @@
+{
+  "name": "svg2avd",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run src/index.ts --svg-dir svg --out-dir out --prefix ic_1_ ",
+    "build:win": "bun build src/index.ts --compile --target=bun-windows-x64 --outfile=dist/win/svg2avd.exe",
+    "build:mac-m1": "bun build src/index.ts --compile --target=bun-darwin-arm64 --outfile=dist/mac-m1/svg2avd",
+    "build:mac-x64": "bun build src/index.ts --compile --target=bun-darwin-x64 --outfile=dist/mac-x64/svg2avd",
+    "build:all": "bun run build:win && bun run build:mac-m1 && bun run build:mac-x64",
+    "build:with-plugins": "bun run plugins/inline-json-plugin.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/cheerio": "^1.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.0",
+    "svgo": "^4.0.0"
+  }
+}

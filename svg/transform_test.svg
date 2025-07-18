@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 基本形状 -->
+  <rect x="10" y="10" width="50" height="50" fill="red" />
+  
+  <!-- 平移变换 -->
+  <g transform="translate(100, 0)">
+    <rect x="10" y="10" width="50" height="50" fill="blue" />
+  </g>
+  
+  <!-- 旋转变换 -->
+  <g transform="rotate(45 135 135)">
+    <rect x="110" y="110" width="50" height="50" fill="green" />
+  </g>
+  
+  <!-- 缩放变换 - 单个值 -->
+  <g transform="scale(1.5)">
+    <rect x="10" y="100" width="50" height="50" fill="purple" />
+  </g>
+  
+  <!-- 缩放变换 - 两个值 -->
+  <g transform="scale(0.5, 2)">
+    <rect x="200" y="10" width="50" height="50" fill="orange" />
+  </g>
+  
+  <!-- 水平镜像 -->
+  <g transform="matrix(-1, 0, 0, 1, 400, 0)">
+    <rect x="300" y="100" width="50" height="50" fill="cyan" />
+  </g>
+  
+  <!-- 垂直镜像 -->
+  <g transform="matrix(1, 0, 0, -1, 0, 400)">
+    <rect x="300" y="300" width="50" height="50" fill="magenta" />
+  </g>
+  
+  <!-- 复合变换：旋转+缩放+平移 -->
+  <g transform="translate(200, 200) scale(0.8) rotate(30)">
+    <rect x="0" y="0" width="50" height="50" fill="yellow" />
+  </g>
+  
+  <!-- 倾斜变换 -->
+  <g transform="matrix(1, 0.5, 0, 1, 0, 300)">
+    <rect x="10" y="0" width="50" height="50" fill="lime" />
+  </g>
+</svg>

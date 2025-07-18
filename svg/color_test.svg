@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 测试各种颜色名称 -->
+  <rect x="10" y="10" width="50" height="50" fill="red" stroke="blue" stroke-width="2"/>
+  <rect x="70" y="10" width="50" height="50" fill="green" stroke="purple" stroke-width="2"/>
+  <rect x="130" y="10" width="50" height="50" fill="yellow" stroke="brown" stroke-width="2"/>
+  <rect x="190" y="10" width="50" height="50" fill="cyan" stroke="magenta" stroke-width="2"/>
+  <rect x="250" y="10" width="50" height="50" fill="lime" stroke="navy" stroke-width="2"/>
+  <rect x="310" y="10" width="50" height="50" fill="orange" stroke="teal" stroke-width="2"/>
+  
+  <circle cx="35" cy="100" r="25" fill="pink" stroke="darkgreen" stroke-width="2"/>
+  <circle cx="95" cy="100" r="25" fill="lightblue" stroke="darkred" stroke-width="2"/>
+  <circle cx="155" cy="100" r="25" fill="lightgreen" stroke="darkblue" stroke-width="2"/>
+  <circle cx="215" cy="100" r="25" fill="lightyellow" stroke="darkorange" stroke-width="2"/>
+  <circle cx="275" cy="100" r="25" fill="lightcyan" stroke="darkmagenta" stroke-width="2"/>
+  <circle cx="335" cy="100" r="25" fill="lightgray" stroke="darkcyan" stroke-width="2"/>
+  
+  <ellipse cx="35" cy="170" rx="25" ry="15" fill="coral" stroke="indigo" stroke-width="2"/>
+  <ellipse cx="95" cy="170" rx="25" ry="15" fill="gold" stroke="maroon" stroke-width="2"/>
+  <ellipse cx="155" cy="170" rx="25" ry="15" fill="silver" stroke="olive" stroke-width="2"/>
+  <ellipse cx="215" cy="170" rx="25" ry="15" fill="khaki" stroke="sienna" stroke-width="2"/>
+  <ellipse cx="275" cy="170" rx="25" ry="15" fill="lavender" stroke="tan" stroke-width="2"/>
+  <ellipse cx="335" cy="170" rx="25" ry="15" fill="plum" stroke="thistle" stroke-width="2"/>
+  
+  <!-- 测试非标准颜色名称 -->
+  <rect x="10" y="200" width="50" height="50" fill="nonexistentcolor" stroke="invalidcolor" stroke-width="2"/>
+</svg>
