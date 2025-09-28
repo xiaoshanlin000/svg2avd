@@ -1,4 +1,4 @@
-import {readFileSync, writeFileSync} from 'fs';
+import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'fs';
 import {resolve, dirname} from 'path';
 
 /**
@@ -15,31 +15,37 @@ const importNamedJsonRegex = /import\s+\{([\w\s,]+)\}\s+from\s+['"]([^'"\n]+\.js
 // 匹配 const foo = require('xxx.json') 这种写法
 const constRequireJsonRegex = /const\s+([\w$]+)\s*=\s*require\(['"]([^'"\n]+\.json)['"]\);?/g;
 
-// 递归查找 node_modules 下所有 js 文件
-function findJsFiles(dir) {
-    const {readdirSync, statSync} = require('fs');
-    let results = [];
-    for (const file of readdirSync(dir)) {
-        const fullPath = resolve(dir, file);
-        if (statSync(fullPath).isDirectory()) {
-            results = results.concat(findJsFiles(fullPath));
-        } else if (file.endsWith('.js')) {
-            results.push(fullPath);
-        } else if (file.endsWith('.cjs')) {
-            results.push(fullPath);
+// 递归遍历并处理 js 文件
+function processJsFiles(dir) {
+    let processedCount = 0;
+
+    function traverseAndProcess(currentDir) {
+        for (const file of readdirSync(currentDir)) {
+            const fullPath = resolve(currentDir, file);
+            const stats = statSync(fullPath);
+
+            if (stats.isDirectory()) {
+                traverseAndProcess(fullPath);
+            } else if (file.endsWith('.js') || file.endsWith('.cjs')) {
+                processFile(fullPath);
+                processedCount++;
+            }
         }
     }
-    return results;
+
+    traverseAndProcess(dir);
+    return processedCount;
 }
 
 function resolveJsonPath(basePath, jsonPath) {
     const abs1 = resolve(basePath, jsonPath);
-    if (require('fs').existsSync(abs1)) return abs1;
+    if (existsSync(abs1)) return abs1;
     // 兼容 node_modules/xxx/xxx.json 绝对路径
     const abs2 = resolve(process.cwd(), 'node_modules', jsonPath);
-    if (require('fs').existsSync(abs2)) return abs2;
+    if (existsSync(abs2)) return abs2;
     return abs1;
 }
+
 function replaceConstRequireJson(fileContent, filePath) {
     return fileContent.replace(constRequireJsonRegex, (match, varName, jsonPath) => {
         const basePath = dirname(filePath);
@@ -53,6 +59,7 @@ function replaceConstRequireJson(fileContent, filePath) {
         }
     });
 }
+
 function replaceRequireJson(fileContent, filePath) {
     return fileContent.replace(requireJsonRegex, (match, jsonPath) => {
         const basePath = dirname(filePath);
@@ -66,6 +73,7 @@ function replaceRequireJson(fileContent, filePath) {
         }
     });
 }
+
 function replaceImportJson(fileContent, filePath) {
     return fileContent.replace(importJsonRegex, (match, importVars, jsonPath) => {
         const basePath = dirname(filePath);
@@ -79,6 +87,7 @@ function replaceImportJson(fileContent, filePath) {
         }
     });
 }
+
 function replaceImportNamedJson(fileContent, filePath) {
     return fileContent.replace(importNamedJsonRegex, (match, importNames, jsonPath) => {
         const basePath = dirname(filePath);
@@ -95,29 +104,46 @@ function replaceImportNamedJson(fileContent, filePath) {
         }
     });
 }
+
 function processFile(filePath) {
-    let fileContent = readFileSync(filePath, 'utf8');
-    let modified = false;
-    let newContent = fileContent;
-    // 依次调用所有替换函数
-    const replacedConst = replaceConstRequireJson(newContent, filePath);
-    if (replacedConst !== newContent) { modified = true; newContent = replacedConst; }
-    const replacedRequire = replaceRequireJson(newContent, filePath);
-    if (replacedRequire !== newContent) { modified = true; newContent = replacedRequire; }
-    const replacedImport = replaceImportJson(newContent, filePath);
-    if (replacedImport !== newContent) { modified = true; newContent = replacedImport; }
-    const replacedImportNamed = replaceImportNamedJson(newContent, filePath);
-    if (replacedImportNamed !== newContent) { modified = true; newContent = replacedImportNamed; }
-    if (modified) {
-        writeFileSync(filePath, newContent, 'utf8');
-        console.log('已修改:', filePath);
+    try {
+        let fileContent = readFileSync(filePath, 'utf8');
+        let modified = false;
+
+        // 依次调用所有替换函数
+        const replacedConst = replaceConstRequireJson(fileContent, filePath);
+        if (replacedConst !== fileContent) { modified = true; fileContent = replacedConst; }
+
+        const replacedRequire = replaceRequireJson(fileContent, filePath);
+        if (replacedRequire !== fileContent) { modified = true; fileContent = replacedRequire; }
+
+        const replacedImport = replaceImportJson(fileContent, filePath);
+        if (replacedImport !== fileContent) { modified = true; fileContent = replacedImport; }
+
+        const replacedImportNamed = replaceImportNamedJson(fileContent, filePath);
+        if (replacedImportNamed !== fileContent) { modified = true; fileContent = replacedImportNamed; }
+
+        if (modified) {
+            writeFileSync(filePath, fileContent, 'utf8');
+            console.log('已修改:', filePath);
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('处理文件时出错:', filePath, error.message);
+        return false;
     }
 }
 
 function main() {
     const base = resolve(process.cwd(), 'node_modules');
-    const files = findJsFiles(base);
-    files.forEach(processFile);
+    console.log('开始扫描和处理 node_modules 中的 js 文件...');
+
+    const startTime = Date.now();
+    const processedCount = processJsFiles(base);
+    const endTime = Date.now();
+
+    console.log(`处理完成！共处理 ${processedCount} 个文件，耗时 ${endTime - startTime}ms`);
 }
 
 if (require.main === module) {

@@ -269,11 +269,30 @@ function renderNode(el: Cheerio, inherited: any = {}): string {
 }
 
 export function svgToAvd(svgContent: string): string {
-  const $ = load(svgContent, { xmlMode: true });
-  const svg = $("svg");
-  if (!svg.length) throw new Error("无效SVG");
-  const width = svg.attr("width") || "24";
-  const height = svg.attr("height") || "24";
-  const children = svg.children().filter((i, c) => c.type === "tag").map((i, c) => renderNode(svg.children().eq(i), {})).get().join("\n");
-  return `<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<vector xmlns:android=\"http://schemas.android.com/apk/res/android\" android:width=\"${width}dp\" android:height=\"${height}dp\" android:viewportWidth=\"${width}\" android:viewportHeight=\"${height}\">\n${children}\n</vector>`;
+    const $ = load(svgContent, { xmlMode: true });
+    const svg = $("svg");
+    if (!svg.length) throw new Error("无效SVG");
+
+    // 新增：解析 viewBox，如果没有则使用宽高
+    const viewBox = svg.attr("viewBox");
+    let viewportWidth, viewportHeight;
+
+    if (viewBox) {
+        const viewBoxParts = viewBox.split(/\s+/).filter(part => part !== '');
+        if (viewBoxParts.length >= 4) {
+            viewportWidth = viewBoxParts[2];
+            viewportHeight = viewBoxParts[3];
+        }
+    }
+
+    // 如果没有 viewBox 或解析失败，则使用 width 和 height
+    if (!viewportWidth || !viewportHeight) {
+        viewportWidth = svg.attr("width") || "24";
+        viewportHeight = svg.attr("height") || "24";
+    }
+
+    const width = svg.attr("width") || "24";
+    const height = svg.attr("height") || "24";
+    const children = svg.children().filter((i, c) => c.type === "tag").map((i, c) => renderNode(svg.children().eq(i), {})).get().join("\n");
+    return `<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<vector xmlns:android=\"http://schemas.android.com/apk/res/android\" android:width=\"${width}dp\" android:height=\"${height}dp\" android:viewportWidth=\"${viewportWidth}\" android:viewportHeight=\"${viewportHeight}\">\n${children}\n</vector>`;
 }
