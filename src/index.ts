@@ -5,6 +5,15 @@ import {svgToAvd} from "./svg2avd";
 
 const args = process.argv.slice(2);
 
+// 新增：文件名规范化函数
+function normalizeFileName(name: string): string {
+    return name
+        .toLowerCase() // 全小写
+        .replace(/[\s\-_]+/g, '_') // 空格、短横线、下划线等连续非单词字符转为一个下划线
+        .replace(/[^a-z0-9_]/g, '') // 移除非小写字母、数字、下划线的字符
+        .replace(/^_+|_+$/g, ''); // 去除首尾的下划线
+}
+
 function parseArgs() {
     const params: Record<string, string> = {};
     for (let i = 0; i < args.length; i++) {
@@ -35,7 +44,10 @@ async function main() {
             console.error(`转换失败: ${file} - ${(e as Error).message}`);
             continue;
         }
-        const outName = prefix + basename(file, ".svg") + ".xml";
+        // 修改这一行：先获取文件名（不含扩展名），规范化后再拼接前缀和扩展名
+        const baseName = basename(file, ".svg");
+        const normalizedBaseName = normalizeFileName(baseName);
+        const outName = prefix + normalizedBaseName + ".xml";
         await writeFile(join(outDir, outName), avdXml, "utf-8");
         console.log(`已生成: ${outDir}/${outName}`);
     }
