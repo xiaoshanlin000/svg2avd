@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .st0 {
+            fill: #f60
+        }
+        .st1 {
+            fill: #00ff00;
+            stroke: #0000ff;
+            stroke-width: 2;
+        }
+    </style>
+    <rect x="10" y="10" width="50" height="50" class="st0" />
+    <circle cx="75" cy="75" r="20" class="st1" />
+</svg>
